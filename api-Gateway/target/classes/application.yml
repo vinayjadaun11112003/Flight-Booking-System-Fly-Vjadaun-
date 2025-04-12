@@ -1,0 +1,61 @@
+spring:
+ cloud:
+   gateway:
+     routes:
+       - id: BookingService
+         uri: lb://BOOKINGSERVICE
+         predicates:
+           - Path=/BookingService/**,/admin3/**
+         filters:
+           - AuthenticationFilter
+
+
+       - id: SearchFlights
+         uri: lb://SEARCHFLIGHTS
+         predicates:
+          - Path=/Search/**,/admin2/**
+         filters:
+           - AuthenticationFilter
+
+       - id: identity-service
+         uri: lb://IDENTITY-SERVICE
+         predicates:
+           - Path=/auth/**,/admin1/**
+
+       - id: paymentservice
+         uri: lb://PAYMENTGATEWAY
+         predicates:
+           - Path=/admin4/**
+         filters:
+           - AuthenticationFilter
+
+       - id: checkinservice
+         uri: lb://CHECKINSERVICE
+         predicates:
+           - Path=/CheckinService/**
+         filters:
+           - AuthenticationFilter
+
+
+
+ application:
+   name: API-GATEWAY
+
+eureka:
+  client:
+    service-url:
+      defaultZone : http://localhost:8761/eureka/
+
+
+
+      global cors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"

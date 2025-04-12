@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="api-Gateway" />
+        <module name="UserService" />
+        <module name="CheckInService" />
+        <module name="BookingService" />
+        <module name="ServiceRegistry" />
+        <module name="SearchFlights" />
+        <module name="identity-service" />
+        <module name="FareService" />
+        <module name="Notification" />
+      </profile>
+      <profile name="Annotation profile for StripeGateway" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
+        </processorPath>
+        <module name="StripeGateway" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="apiGateway" target="17" />
+      <module name="apiGatewayy" target="17" />
+      <module name="swiggy-gateway" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="BookingService" options="-parameters" />
+      <module name="CheckInService" options="-parameters" />
+      <module name="FareService" options="-parameters" />
+      <module name="Notification" options="-parameters" />
+      <module name="SearchFlights" options="-parameters" />
+      <module name="ServiceRegistry" options="-parameters" />
+      <module name="StripeGateway" options="-parameters" />
+      <module name="UserService" options="-parameters" />
+      <module name="api-Gateway" options="-parameters" />
+      <module name="apiGateway" options="-parameters" />
+      <module name="apiGatewayy" options="-parameters" />
+      <module name="identity-service" options="-parameters" />
+      <module name="swiggy-gateway" options="-parameters" />
+    </option>
+  </component>
+</project>

@@ -1,0 +1,66 @@
+Technology Stack:
+ Spring Boot latest for developing independent microservices.
+ Spring Security with JWT.  for secure authentication and role-based access control.
+ MySQL/PostgreSQL for transactional data and MongoDB for flexible storage of non-relational data.
+ Spring Cloud for microservice discovery, load balancing, and fault tolerance.
+ React.js/Angular for front-end (optional), providing a modern user interface.
+ 
+---
+Case Study Implementation  - Java Full Stack
+ 
+===========================================
+    Back-End       	   +		Front-End   	+	Database
+ 
+Spring Microservices 	   +		 Angular	+	 MySQL
+
+Time-line allotted to complete the case study
+ 
+===============================================
+ 
+Back-End  	Spring Microservices 	(5 Days)
+ 
+Front-End 	Angular 		(5 Days)
+11 to 12 days for Case Study
+
+Mandatory Microservices
+ 
+========================
+ 
+1. EurekaServer Service (All services used in the case study must be registered)
+ 
+2. GateWayAPI Service   (All the Microservices used in the case study must be a single point)
+ 
+3. Registration Service
+ 
+4. Login Service        (Implementation of JWT Filter Authorization)
+
+x. Payment Service      
+
+Evaluation Parameters
+ 
+======================
+ 
+1. Requirement Understanding
+ 
+2. Design Diagrams(Use Case, Class Diagram , ER Diagram )	
+ 
+3. Completeness wrt Timelines as per requirements & Working demonstration /
+ 
+	E2E demo of the chosen functionality.	
+ 
+    (Spring Boot + Spring REST + Microservices + Spring Data JPA +  MySQL + Postman/Swagger )	
+ 
+4. Ability to apply concepts ( additional functionality asked to implement)	
+ 
+5. Coding Standards (Naming Conventions, Comments and Indentation) -- Clean coding Techniques
+ 
+6. AOP - Loggers ---------------> SLFJ -------> Logfile must be created and stored all the logs		
+ 
+7. JUnit + Mockito Testing -------------> Testcase must be written for all the services	
+ 
+8. Exception  Handling/ Data Validation in Spring Boot Application 	
+ 
+9. DevOps implementation(GIT + Maven/Sonarcube )	
+ 
+10. Q & A (Viva Voce)
+ 
