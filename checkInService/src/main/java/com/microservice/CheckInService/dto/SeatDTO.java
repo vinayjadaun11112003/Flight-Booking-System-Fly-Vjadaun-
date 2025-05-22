@@ -8,9 +8,10 @@ import lombok.*;
 @NoArgsConstructor
 @Data
 public class SeatDTO {
-    private Long seatId;
+    private String seatId;
     private String flightId;
     private String seatNumber;
     private boolean isBooked;
     private String passengerId;
+    private String email;
 }

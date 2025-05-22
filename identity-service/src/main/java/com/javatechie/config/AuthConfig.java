@@ -23,6 +23,7 @@ public class AuthConfig {
     }
 
 
+    // Filter Chaining
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
@@ -32,11 +33,13 @@ public class AuthConfig {
                 .build();
     }
 
+    // Bcrpt password encoder
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    // authentication provider
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider authenticationProvider=new DaoAuthenticationProvider();
@@ -45,6 +48,7 @@ public class AuthConfig {
         return authenticationProvider;
     }
 
+    // Authentication manager
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();

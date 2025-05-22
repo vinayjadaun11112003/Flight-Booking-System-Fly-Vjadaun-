@@ -1,6 +1,8 @@
 package com.microservice.Notification.dto;
 
+import lombok.Data;
 
+@Data
 public class RequestMail {
     String to;
     String subject;

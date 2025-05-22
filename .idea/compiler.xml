@@ -16,6 +16,7 @@
         <module name="identity-service" />
         <module name="FareService" />
         <module name="Notification" />
+        <module name="ConfigServier" />
       </profile>
       <profile name="Annotation profile for StripeGateway" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -37,6 +38,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="BookingService" options="-parameters" />
       <module name="CheckInService" options="-parameters" />
+      <module name="ConfigServier" options="-parameters" />
       <module name="FareService" options="-parameters" />
       <module name="Notification" options="-parameters" />
       <module name="SearchFlights" options="-parameters" />

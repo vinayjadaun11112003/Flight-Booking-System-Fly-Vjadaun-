@@ -4,7 +4,10 @@ import com.microservice.SearchFlights.dto.FareRequest;
 import com.microservice.SearchFlights.dto.FlightDTO;
 import com.microservice.SearchFlights.dto.SearchFlightRequestDTO;
 import com.microservice.SearchFlights.entity.FlightEntity;
+import com.microservice.SearchFlights.exception.InvalidFlightTimeException;
 import com.microservice.SearchFlights.repository.FlightRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,11 +22,21 @@ public class SearchService {
     private FlightRepository flightRepository;
 
     @Autowired
+    private static Logger logger = LoggerFactory.getLogger(SearchService.class);
+
+    @Autowired
     private RestTemplate restTemplate;
 
+    // Method to add flight to the system[VJ]
     public FlightDTO addFlight(FlightDTO flight){
+        logger.info("Add Flight Called");
+        if (flight.getDepartureDate().after(flight.getArrivalDate())) {
+            throw new InvalidFlightTimeException("Departure date cannot be after arrival date.");
+        }
+
         UUID uuid = UUID.randomUUID();
         flight.setFlightId(uuid.toString());
+
         FlightEntity flightEntity = new FlightEntity(flight.getFlightId(),flight.getFlightName(),flight.getFromCity(),flight.getToCity(),flight.getDepartureDate(),flight.getArrivalDate(),flight.getDepartureTime(),flight.getArrivalTime(),flight.getFareRequest());
         // Save flight first
         FlightEntity savedFlight = flightRepository.save(flightEntity);
@@ -40,11 +53,16 @@ public class SearchService {
         restTemplate.postForObject(checkInUrl, null, Void.class, savedFlight.getFlightId(), 40);
         // Call FareService
         restTemplate.postForObject("http://localhost:8081/FareService/addNewFare", fareData, FareRequest.class);
-
+        logger.info("Flight Added to the system Successfully with id : "+flight.getFlightId());
         return flight;
     }
 
+
+
+
+    // Method to fetch all the flights from the system[VJ]
     public List<FlightDTO> getAllFlights(){
+        logger.info("Get All Flight Called");
         List<FlightEntity> flights = flightRepository.findAll();
         List<FlightDTO> dto = new ArrayList<>();
         for(FlightEntity flightEntity : flights){
@@ -59,10 +77,19 @@ public class SearchService {
             flight.setFareRequest(fareRequest);
         });
 
+        logger.info("All Flights fetch from the system and sent to the frontend");
         return dto;
+
     }
 
+
+    // Method to update the flight in the system[VJ]
     public String updateFlight(String id, FlightDTO updatedFlight){
+        logger.info("Update Flight By Id Called");
+        if (updatedFlight.getDepartureDate().after(updatedFlight.getArrivalDate())) {
+            logger.error("Invalid flight time exception triggered");
+            throw new InvalidFlightTimeException("Departure date cannot be after arrival date.");
+        }
         return flightRepository.findById(id).map(flight -> {
             flight.setArrivalDate(updatedFlight.getArrivalDate());
             flight.setDepartureDate(updatedFlight.getDepartureDate());
@@ -82,16 +109,18 @@ public class SearchService {
                     fareData
             );
             System.out.println(fareData.get("flightId"));
-            System.out.println(fareData.get("economyFare"));
-            System.out.println(fareData.get("bussinessFare"));
 
 
+            logger.info("Flight and Fare updated successfully for ID " + id);
             return "Flight and Fare updated successfully for ID " + id;
         }).orElse("Flight not found with ID " + id);
     }
 
 
+
+    // Method to fetch the flight by Id[VJ]
     public FlightDTO getFlightById(String id){
+        logger.info("Get Flight By Id Called");
         Optional<FlightEntity> flightEntity = flightRepository.findById(id);
         FlightDTO flightDTO = null;
         if(flightEntity!=null){
@@ -102,26 +131,33 @@ public class SearchService {
             );
             flightDTO.setFareRequest(fareRequest);
 
-
+            logger.info("Flight fetched and sent to the frontend with id : " + id);
             return flightDTO;
         }else{
+            logger.warn("Flight not found in the system with id : "+ id);
             return flightDTO;
         }
     }
 
+
+
+    // Method to delete the flight by id[VJ]
     public String deleteFlight(String id){
         if (flightRepository.existsById(id)) {
             flightRepository.deleteById(id);
 
             // Call FareService to delete fare
             restTemplate.delete("http://localhost:8081/FareService/deleteById/" + id);
-
+            logger.info("Flight with ID \" + id + \" and associated fare deleted successfully. " );
             return "Flight with ID " + id + " and associated fare deleted successfully.";
         } else {
+            logger.warn("Flight with ID : "+ id + " not found");
             return "Flight with ID " + id + " not found.";
         }
     }
 
+
+    // Method to convert the entity to dto[VJ]
     private FlightDTO convertToDTO(FlightEntity entity) {
         FlightDTO dto = new FlightDTO();
         BeanUtils.copyProperties(entity, dto);
@@ -141,17 +177,19 @@ public class SearchService {
         return dto;
     }
 
+
+    // Method to search the flight by location and date[VJ]
     public List<FlightDTO> searchFlights(SearchFlightRequestDTO request) {
+        logger.info("Search Flight Called");
         List<FlightEntity> flights = flightRepository.findByFromCityAndToCityAndDepartureDate(
                 request.getFromCity(),
                 request.getToCity(),
                 request.getDepartureDate()
         );
-
+        logger.info("Flight Fetched from the server and sent to the frontend");
         return flights.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
-
 
 }

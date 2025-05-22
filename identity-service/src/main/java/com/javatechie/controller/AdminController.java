@@ -3,6 +3,7 @@ package com.javatechie.controller;
 import com.javatechie.entity.UserCredential;
 import com.javatechie.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +29,7 @@ public class AdminController {
     }
 
     @PutMapping("/updateUser/{id}")
-    public Map<String,String> updateUser(@PathVariable String id, @RequestBody UserCredential userCredential){
+    public ResponseEntity<Map<String,String>> updateUser(@PathVariable String id, @RequestBody UserCredential userCredential){
         return authService.updateUser(id,userCredential);
     }
 

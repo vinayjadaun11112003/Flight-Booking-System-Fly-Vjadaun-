@@ -1,14 +1,16 @@
 package com.microservice.CheckInService.repository;
 
 import com.microservice.CheckInService.entity.Seat;
-import org.springframework.data.jpa.repository.JpaRepository;
+
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-@Repository
-public interface SeatRepository extends JpaRepository<Seat, Long> {
+@EnableMongoRepositories
+public interface SeatRepository extends MongoRepository<Seat, Long> {
 
     List<Seat> findByFlightId(String flightId);
 

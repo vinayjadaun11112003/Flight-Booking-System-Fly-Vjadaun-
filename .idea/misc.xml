@@ -17,6 +17,7 @@
         <option value="$PROJECT_DIR$/identity-service/pom.xml" />
         <option value="$PROJECT_DIR$/swiggy-gateway/pom.xml" />
         <option value="$PROJECT_DIR$/api-Gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/ConfigServer/pom.xml" />
       </list>
     </option>
   </component>

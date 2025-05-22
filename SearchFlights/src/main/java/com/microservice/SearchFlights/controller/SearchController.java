@@ -22,11 +22,6 @@ public class SearchController {
     @Autowired
     private SearchService searchService;
 
-    @GetMapping
-    public String test(){
-        return "working fine";
-    }
-
     @PostMapping("/search")
     public ResponseEntity<List<FlightDTO>> searchFlights(@RequestBody SearchFlightRequestDTO request) {
         List<FlightDTO> flights = searchService.searchFlights(request);

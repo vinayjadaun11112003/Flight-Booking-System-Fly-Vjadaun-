@@ -25,11 +25,12 @@ public class CheckInController {
 
 
 
-    @PostMapping("/CheckIn/{flightId}/{passengerId}/{seatNumber}")
+    @PostMapping("/CheckIn/{flightId}/{passengerId}/{email}/{seatNumber}")
     public String checkIn(@PathVariable String flightId,
                           @PathVariable String passengerId,
-                          @PathVariable String seatNumber) {
-       return checkinService.checkin(flightId,passengerId,seatNumber);
+                          @PathVariable String seatNumber,
+                          @PathVariable String email) {
+       return checkinService.checkin(flightId,passengerId,seatNumber,email);
     }
 
 
@@ -48,7 +49,7 @@ public class CheckInController {
 
         List<SeatDTO> dto = new ArrayList<>();
         for(Seat seat : unassignedSeats){
-            SeatDTO d = new SeatDTO(seat.getSeatId(),seat.getFlightId(),seat.getSeatNumber(),seat.isBooked(),seat.getPassengerId());
+            SeatDTO d = new SeatDTO(seat.getSeatId(),seat.getFlightId(),seat.getSeatNumber(),seat.isBooked(),seat.getPassengerId(),seat.getEmail());
             dto.add(d);
         }
         return dto;

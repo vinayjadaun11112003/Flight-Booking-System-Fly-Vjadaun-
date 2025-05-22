@@ -35,5 +35,8 @@ public class ProductCheckoutController {
     public Optional<Payment> findBySessionId(@PathVariable String id){
         return stripeService.findBySessionId(id);
     }
-
+    @DeleteMapping("/deleteBySessionId/{id}")
+    public Map<String,String> deleteById(@PathVariable String id){
+        return stripeService.deleteBySessionId(id);
+    }
 }

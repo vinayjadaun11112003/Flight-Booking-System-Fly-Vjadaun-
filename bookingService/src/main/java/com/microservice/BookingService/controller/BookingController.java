@@ -44,4 +44,8 @@ public class BookingController {
     public List<Payment> getBookingsByUserId(@PathVariable String id){
         return bookingService.getBookingsByUserId(id);
     }
+    @DeleteMapping("/deleteById/{id}")
+    public Map<String,String> cancelById(@PathVariable String id){
+        return bookingService.cancelByBookingId(id);
+    }
 }
