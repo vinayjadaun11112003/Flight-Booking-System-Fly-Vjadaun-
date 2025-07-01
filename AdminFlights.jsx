@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import AdminHeader from '../../components/AdminHeader';
 import Footer from '../../components/Footer';
-import DatePicker from "react-multi-date-picker";
 
 const DEFAULT_FORM_DATA = {
   flightName: '',
   fromCity: '',
   toCity: '',
+  departureDate: '',
+  arrivalDate: '',
   departureTime: '',
   arrivalTime: '',
   seats: '1',
@@ -22,7 +23,6 @@ const AdminFlights = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredFlights, setFilteredFlights] = useState([]);
   const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
-  const [selectedDates, setSelectedDates] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -53,48 +53,25 @@ const AdminFlights = () => {
 
   const handleAddOrUpdate = async () => {
     const token = localStorage.getItem('token');
-    if (isEdit) {
-      try {
-        await axios.put(`http://localhost:8080/admin2/updateFlight/${editId}`, formData, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        alert('Flight updated successfully!');
-      } catch (err) {
-        alert("Error updating flight");
-        console.error(err);
-      }
-    } else {
-      if (selectedDates.length === 0) {
-        alert("Please select at least one departure date.");
-        return;
-      }
+    const url = isEdit
+      ? `http://localhost:8080/admin2/updateFlight/${editId}`
+      : 'http://localhost:8080/admin2/addNewFlight';
+    const method = isEdit ? 'put' : 'post';
 
-      try {
-        for (const date of selectedDates) {
-          const departureDate = date.format("YYYY-MM-DD");
-          const arrivalDate = departureDate;
+    try {
+      await axios[method](url, formData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-          const dataToSend = {
-            ...formData,
-            departureDate,
-            arrivalDate,
-          };
-
-          await axios.post('http://localhost:8080/admin2/addNewFlight', dataToSend, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-        }
-        alert('Flights added successfully!');
-      } catch (err) {
-        alert("Failed to add flights");
-        console.error(err);
-      }
+      setFormData(DEFAULT_FORM_DATA);  // Reset form data after submission
+      setShowForm(false);  // Close the form
+      fetchFlights();  // Fetch the updated flights list
+      alert(isEdit ? 'Flight updated successfully!' : 'Flight added successfully!');
+    } catch (err) {
+     
+      alert("Incorrect amount or arrival date entered")
+      console.error('Failed to add/update flight:', err);
     }
-
-    setFormData(DEFAULT_FORM_DATA);
-    setSelectedDates([]);
-    setShowForm(false);
-    fetchFlights();
   };
 
   const handleDelete = async (flightId) => {
@@ -117,6 +94,8 @@ const AdminFlights = () => {
       flightName: flight.flightName,
       fromCity: flight.fromCity,
       toCity: flight.toCity,
+      departureDate: flight.departureDate,
+      arrivalDate: flight.arrivalDate,
       departureTime: flight.departureTime,
       arrivalTime: flight.arrivalTime,
       seats: flight.seats,
@@ -145,7 +124,7 @@ const AdminFlights = () => {
         className="min-h-screen bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url('/adminflight.jpg')" }}
       >
-        <div className="bg-opacity-90 min-h-screen px-4 md:px-16 py-10">
+        <div className=" bg-opacity-90 min-h-screen px-4 md:px-16 py-10">
           <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
             <input
               type="text"
@@ -159,7 +138,6 @@ const AdminFlights = () => {
                 setShowForm(true);
                 setIsEdit(false);
                 setFormData(DEFAULT_FORM_DATA);
-                setSelectedDates([]);
               }}
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow"
             >
@@ -236,17 +214,20 @@ const AdminFlights = () => {
                 value={formData.toCity}
                 onChange={(e) => setFormData({ ...formData, toCity: e.target.value })}
               />
-
-              {!isEdit && (
-                <DatePicker
-                  multiple
-                  value={selectedDates}
-                  onChange={setSelectedDates}
-                  className="w-full p-2 border border-gray-300 rounded"
-                  placeholder="Select Departure Dates"
-                />
-              )}
-
+              <input
+                className="w-full p-2 border border-gray-300 rounded"
+                type="date"
+                placeholder="Departure Date"
+                value={formData.departureDate}
+                onChange={(e) => setFormData({ ...formData, departureDate: e.target.value })}
+              />
+              <input
+                className="w-full p-2 border border-gray-300 rounded"
+                type="date"
+                placeholder="Arrival Date"
+                value={formData.arrivalDate}
+                onChange={(e) => setFormData({ ...formData, arrivalDate: e.target.value })}
+              />
               <input
                 className="w-full p-2 border border-gray-300 rounded"
                 type="time"
@@ -261,7 +242,7 @@ const AdminFlights = () => {
                 value={formData.arrivalTime}
                 onChange={(e) => setFormData({ ...formData, arrivalTime: e.target.value })}
               />
-
+         
               <input
                 className="w-full p-2 border border-gray-300 rounded"
                 placeholder="Economy Fare"
@@ -297,7 +278,7 @@ const AdminFlights = () => {
                 className="bg-blue-600 text-white px-4 py-2 rounded"
                 onClick={handleAddOrUpdate}
               >
-                {isEdit ? 'Update Flight' : 'Add Flights'}
+                {isEdit ? 'Update Flight' : 'Add Flight'}
               </button>
             </div>
           </div>
